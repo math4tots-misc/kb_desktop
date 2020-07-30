@@ -1,0 +1,11 @@
+[package]
+name = "kb_desktop"
+version = "0.0.1"
+authors = ["Kyumin Kim <math4tots@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+kb = { version = "0.0.1", path = "../kb" }
+ggez = "0.5.1"
