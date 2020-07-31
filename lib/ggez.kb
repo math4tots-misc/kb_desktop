@@ -6,7 +6,7 @@ CODE_CLEAR_SCREEN = 1002
 
 DEFAULT_FONT_SCALE = 16
 
-fn Print(string, x = 0, y = 0, xscale = 1, yscale = 1, fontscale = 32)
+fn Print(string, x = 0, y = 0, xscale = 1, yscale = 1, fontscale = 16)
     SEND(CODE_DRAW_TEXT, string, x, y, xscale, yscale, fontscale)
 end
 
