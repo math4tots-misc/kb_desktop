@@ -6,4 +6,8 @@ end
 fn Draw
     gg.Clear([0, 0, 0])
     gg.Print('Hello world', fontscale = 64)
+    gg.Print({
+        'text': 'Hello color',
+        'color': [1, 1, 0],
+    }, 50, 50, fontscale = 64)
 end

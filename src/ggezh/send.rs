@@ -6,18 +6,25 @@ impl GgezHandler {
             // draw text
             1001 => {
                 checkargc(&args, 6)?;
-                let text = args[0].expect_string()?.clone();
-                let x = args[1].expect_number()? as f32;
-                let y = args[2].expect_number()? as f32;
-                let xscale = args[3].expect_number()? as f32;
-                let yscale = args[4].expect_number()? as f32;
-                let fontscale = args[5].expect_number()? as f32;
+                let mut args = args.into_iter();
+                let mut text = to_text(args.next().unwrap())?;
+                let x = args.next().unwrap().expect_number()? as f32;
+                let y = args.next().unwrap().expect_number()? as f32;
+                let xscale = args.next().unwrap().expect_number()? as f32;
+                let yscale = args.next().unwrap().expect_number()? as f32;
+                match args.next().unwrap() {
+                    Val::Nil => {}
+                    val => {
+                        let fontscale = val.expect_number()? as f32;
+                        text.set_font(
+                            graphics::Font::default(),
+                            graphics::Scale::uniform(fontscale),
+                        );
+                    }
+                }
                 converr(graphics::draw(
                     &mut self.ctx,
-                    graphics::Text::new(text.as_ref()).set_font(
-                        graphics::Font::default(),
-                        graphics::Scale::uniform(fontscale),
-                    ),
+                    &text,
                     graphics::DrawParam::default()
                         .dest([x, y])
                         .scale([xscale, yscale]),

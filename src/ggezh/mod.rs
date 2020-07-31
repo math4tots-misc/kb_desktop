@@ -8,7 +8,7 @@ use crate::Val;
 use crate::Vm;
 use ggez::{
     event::{self, EventHandler},
-    graphics::{self, Color},
+    graphics::{self, Color, Text, TextFragment},
     Context, ContextBuilder, GameResult,
 };
 use std::rc::Rc;
