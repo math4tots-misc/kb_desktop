@@ -1,13 +1,17 @@
 extern crate kb;
 
+macro_rules! rterr {
+    ( $($args:expr),+ $(,)?) => {
+        crate::rterr(format!( $($args),+ ))
+    };
+}
+
 mod dh;
-mod req;
-mod res;
+mod ggezh;
 mod m;
 
 pub use kb::*;
 
 pub use dh::*;
-pub use req::*;
-pub use res::*;
+pub use ggezh::*;
 pub use m::main;

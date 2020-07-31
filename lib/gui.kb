@@ -1,6 +1,0 @@
-CODE_INIT = 10
-
-
-fn Init
-    SEND(CODE_INIT)
-end

@@ -1,5 +1,9 @@
-import gui
+import ggez
 
-print 'in b.demo.kb'
+fn Update
+end
 
-gui.Init()
+fn Draw
+    ggez.Clear([0, 0, 0])
+    ggez.Print('Hello world!')
+end
