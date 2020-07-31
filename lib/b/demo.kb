@@ -1,9 +1,9 @@
-import ggez
+import ggez.graphics as gg
 
 fn Update
 end
 
 fn Draw
-    ggez.Clear([0, 0, 0])
-    ggez.Print('Hello world', fontscale = 64)
+    gg.Clear([0, 0, 0])
+    gg.Print('Hello world', fontscale = 64)
 end
