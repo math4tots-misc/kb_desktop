@@ -11,3 +11,13 @@ fn Draw
         'color': [1, 1, 0],
     }, 50, 50, fontscale = 64)
 end
+
+fn KeyDown(key, repeat)
+    if not repeat
+        print CAT('Key ', key, ' pressed')
+    end
+end
+
+fn KeyUp(key)
+    print CAT('Key ', key, ' released')
+end
