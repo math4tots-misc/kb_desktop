@@ -59,6 +59,10 @@ fn to_textfragment(val: Val) -> Result<TextFragment, Val> {
             if let Some(colorval) = map.remove("color") {
                 frag.color = Some(to_color(&colorval)?);
             }
+            if let Some(scaleval) = map.remove("scale") {
+                let fontscale = scaleval.expect_number()? as f32;
+                frag.scale = Some(graphics::Scale::uniform(fontscale));
+            }
             if !map.is_empty() {
                 let keys: Vec<_> = map.keys().collect();
                 return Err(rterr!("Unused fragment attributes: {:?}", keys));

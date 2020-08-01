@@ -7,6 +7,7 @@ use crate::RcStr;
 use crate::Val;
 use crate::Vm;
 use crate::HCow;
+use crate::Handle;
 use ggez::{
     event::{self, EventHandler, KeyMods, KeyCode},
     graphics::{self, Color, Text, TextFragment},

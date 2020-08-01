@@ -15,11 +15,11 @@ impl GgezHandler {
                 match args.next().unwrap() {
                     Val::Nil => {}
                     val => {
-                        let fontscale = val.expect_number()? as f32;
+                        let scale = val.expect_number()? as f32;
                         text.map_mut(|text| {
                             text.set_font(
                                 graphics::Font::default(),
-                                graphics::Scale::uniform(fontscale),
+                                graphics::Scale::uniform(scale),
                             );
                         });
                     }
@@ -39,6 +39,21 @@ impl GgezHandler {
                 let color = to_color(&args[0])?;
                 graphics::clear(&mut self.ctx, color);
                 Ok(Val::Nil)
+            }
+            // new text objects
+            1003 => {
+                checkargc(&args, 1)?;
+                let text = as_text(args.into_iter().next().unwrap())?.get_or_clone();
+                Ok(Handle::new::<Text>(text).into())
+            }
+            // text dimensions
+            1004 => {
+                checkargc(&args, 1)?;
+                let text = as_text(args.into_iter().next().unwrap())?;
+                let (width, height) = text.map_ref(|text| text.dimensions(&mut self.ctx));
+                let width = Val::from(width as f64);
+                let height = Val::from(height as f64);
+                Ok(vec![width, height].into())
             }
             _ => Err(rterr!("Unrecognized code {}", code)),
         }

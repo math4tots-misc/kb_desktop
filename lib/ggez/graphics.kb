@@ -3,12 +3,20 @@
 # 1000 - 1100: graphics
 CODE_DRAW_TEXT = 1001
 CODE_CLEAR_SCREEN = 1002
+CODE_NEW_TEXT = 1003
+CODE_TEXT_DIM = 1004
 
-fn Print(string, x = 0, y = 0, xscale = 1, yscale = 1, fontscale = nil)
-    # fontscale defaults to 16
-    SEND(CODE_DRAW_TEXT, string, x, y, xscale, yscale, fontscale)
-end
+# (font)scale defaults to 16
+fn Print(string, x = 0, y = 0, xscale = 1, yscale = 1, scale = nil) = (
+    SEND(CODE_DRAW_TEXT, string, x, y, xscale, yscale, scale)
+)
 
-fn Clear(color)
-    SEND(CODE_CLEAR_SCREEN, color)
-end
+fn Clear(color) = SEND(CODE_CLEAR_SCREEN, color)
+
+fn NewText(map) = SEND(CODE_NEW_TEXT, map)
+
+fn GetTextDimensions(text) = SEND(CODE_TEXT_DIM, text)
+
+fn GetTextWidth(text) = GetTextDimensions(text)[0]
+
+fn GetTextHeight(text) = GetTextDimensions(text)[1]
