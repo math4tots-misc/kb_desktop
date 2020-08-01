@@ -1,0 +1,18 @@
+import ggez.graphics as gg
+
+string = ''
+
+fn Draw
+    gg.Clear([0, 0, 0])
+    gg.Print(CAT(string, '@'), scale = 32)
+end
+
+fn TextInput(ch)
+    ord = ORD(ch)
+    if ord is 127
+        # backspace
+        string <- string[:-1]
+    else
+        string <- CAT(string, ch)
+    end
+end

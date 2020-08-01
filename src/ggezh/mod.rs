@@ -47,6 +47,7 @@ struct State {
     draw: Option<Rc<Code>>,
     keydown: Option<Rc<Code>>,
     keyup: Option<Rc<Code>>,
+    textinput: Option<Rc<Code>>,
 
     keycode_cache: HashMap<KeyCode, RcStr>,
 }
@@ -106,6 +107,12 @@ impl EventHandler for State {
             self.die_on_err(result);
         }
     }
+    fn text_input_event(&mut self, _ctx: &mut Context, ch: char) {
+        if let Some(textinput) = &self.textinput {
+            let result = self.vm.applyfunc(textinput, vec![format!("{}", ch).into(), ], None);
+            self.die_on_err(result);
+        }
+    }
 }
 
 fn run(source_roots: Vec<String>, module_name: String) -> Result<(), BasicError> {
@@ -130,12 +137,14 @@ fn run(source_roots: Vec<String>, module_name: String) -> Result<(), BasicError>
     let draw = get_opt_callback(&mut vm, &format!("{}#Draw", module_name).into())?;
     let keydown = get_opt_callback(&mut vm, &format!("{}#KeyDown", module_name).into())?;
     let keyup = get_opt_callback(&mut vm, &format!("{}#KeyUp", module_name).into())?;
+    let textinput = get_opt_callback(&mut vm, &format!("{}#TextInput", module_name).into())?;
     let mut state = State {
         vm,
         update,
         draw,
         keydown,
         keyup,
+        textinput,
         keycode_cache: HashMap::new(),
     };
 
