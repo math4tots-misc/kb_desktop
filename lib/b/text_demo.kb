@@ -1,0 +1,25 @@
+import ggez.graphics as gg
+
+string = ''
+
+fn Draw
+    gg.Clear([0, 0, 0])
+    gg.Print(string, scale = 32)
+end
+
+fn TextInput(ch)
+    print CAT('ch = ', REPR(ch), ', ', LEN(ch))
+    string <- CAT(string, ch)
+end
+
+fn KeyDown(key, _repeat)
+    if key == 'Back'
+        print CAT('BACK is called: ', string, ', ', LEN(string))
+        print CAT('BACK is called: ', string[:-1], ', ', LEN(string[:-1]))
+        string <- string[:-1]
+        print CAT('BACK is called: ', string, ', ', LEN(string))
+        print CAT('BACK is called: ', string[:-1], ', ', LEN(string[:-1]))
+    else
+        print CAT('key = ', key)
+    end
+end
