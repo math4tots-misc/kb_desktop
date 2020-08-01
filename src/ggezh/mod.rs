@@ -6,6 +6,7 @@ use crate::Loader;
 use crate::RcStr;
 use crate::Val;
 use crate::Vm;
+use crate::HCow;
 use ggez::{
     event::{self, EventHandler},
     graphics::{self, Color, Text, TextFragment},

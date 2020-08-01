@@ -10,7 +10,15 @@ pub(super) fn to_color(val: &Val) -> Result<Color, Val> {
     }
 }
 
-pub(super) fn to_text(val: Val) -> Result<Text, Val> {
+pub(super) fn as_text(val: Val) -> Result<HCow<Text>, Val> {
+    if val.is_handle::<Text>() {
+        val.into_hcow()
+    } else {
+        Ok(HCow::Owned(to_text(val.clone())?))
+    }
+}
+
+fn to_text(val: Val) -> Result<Text, Val> {
     let mut frags = Vec::new();
     to_textfragments(val, &mut frags)?;
     let mut text = Text::default();
@@ -20,7 +28,7 @@ pub(super) fn to_text(val: Val) -> Result<Text, Val> {
     Ok(text)
 }
 
-pub(super) fn to_textfragments(val: Val, out: &mut Vec<TextFragment>) -> Result<(), Val> {
+fn to_textfragments(val: Val, out: &mut Vec<TextFragment>) -> Result<(), Val> {
     match val {
         Val::List(list) => match Rc::try_unwrap(list) {
             Ok(list) => {
@@ -39,7 +47,7 @@ pub(super) fn to_textfragments(val: Val, out: &mut Vec<TextFragment>) -> Result<
     Ok(())
 }
 
-pub(super) fn to_textfragment(val: Val) -> Result<TextFragment, Val> {
+fn to_textfragment(val: Val) -> Result<TextFragment, Val> {
     match val {
         Val::String(string) => Ok(TextFragment::new(string.unwrap_or_clone())),
         Val::Map(map) => {
