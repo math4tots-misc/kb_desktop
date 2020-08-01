@@ -8,11 +8,13 @@ use crate::Val;
 use crate::Vm;
 use crate::HCow;
 use ggez::{
-    event::{self, EventHandler},
+    event::{self, EventHandler, KeyMods, KeyCode},
     graphics::{self, Color, Text, TextFragment},
     Context, ContextBuilder, GameResult,
 };
 use std::rc::Rc;
+use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 mod conv;
 mod send;
@@ -42,7 +44,10 @@ struct State {
     vm: Vm<GgezHandler>,
     update: Option<Rc<Code>>,
     draw: Option<Rc<Code>>,
+    keydown: Option<Rc<Code>>,
     sleep_dur: std::time::Duration,
+
+    keycode_cache: HashMap<KeyCode, RcStr>,
 }
 
 impl State {
@@ -52,6 +57,14 @@ impl State {
             Err(error) => {
                 eprintln!("{}", error.format());
                 std::process::exit(1);
+            }
+        }
+    }
+    fn translate_keycode(&mut self, keycode: KeyCode) -> RcStr {
+        match self.keycode_cache.entry(keycode) {
+            Entry::Occupied(entry) => entry.get().clone(),
+            Entry::Vacant(entry) => {
+                entry.insert(format!("{:?}", keycode).into()).clone()
             }
         }
     }
@@ -73,6 +86,13 @@ impl EventHandler for State {
         }
         std::thread::sleep(self.sleep_dur);
         Ok(())
+    }
+    fn key_down_event(&mut self, ctx: &mut Context, keycode: KeyCode, _keymods: KeyMods, _repeat: bool) {
+        if let Some(draw) = &self.draw {
+            let keycode = self.translate_keycode(keycode);
+            let result = self.vm.exec(draw);
+            self.die_on_err(result);
+        }
     }
 }
 
@@ -96,11 +116,14 @@ fn run(source_roots: Vec<String>, module_name: String) -> Result<(), BasicError>
     }
     let update = get_opt_callback(&mut vm, &format!("{}#Update", module_name).into())?;
     let draw = get_opt_callback(&mut vm, &format!("{}#Draw", module_name).into())?;
+    let keydown = get_opt_callback(&mut vm, &format!("{}#KeyDown", module_name).into())?;
     let mut state = State {
         vm,
         update,
         draw,
+        keydown,
         sleep_dur: std::time::Duration::from_secs_f64(1.0 / 20.0),
+        keycode_cache: HashMap::new(),
     };
 
     match event::run(&mut ctx, &mut event_loop, &mut state) {
